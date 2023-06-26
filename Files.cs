@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,8 @@ namespace FilesCompare
 
             var filesWithSameSizesLookup = (Lookup<long, FileInfo>)files.ToLookup(f => f.Length, f => f);
 
+            var result = new List<Tuple<FileInfo, List<FileInfo>>>();
+ 
             foreach (var group in filesWithSameSizesLookup)
             {
                 if (group.Count() > 1)
@@ -84,18 +87,44 @@ namespace FilesCompare
                     {
                         foreach (var fileInfo2 in group)
                         {
-                            if (fileInfo.FullName != fileInfo2.FullName)
+                            if ((fileInfo.FullName != fileInfo2.FullName))
                             {
                                 if (FileCompare(fileInfo.FullName, fileInfo2.FullName) == true)
                                 {
-                                    Console.WriteLine(fileInfo.FullName);
+                                    var f2 = result.Where(x => (x.Item1 == fileInfo) || x.Item2.Contains(fileInfo2) ||
+                                                               (x.Item1 == fileInfo2) || x.Item2.Contains(fileInfo));
+                                    if (!f2.Any())
+                                    {
+                                        result.Add(Tuple.Create(fileInfo, new List<FileInfo>() { fileInfo2 }));
+                                    }
+                                    else
+                                    {
+                                        if (!f2.First().Item2.Contains(fileInfo2) && f2.First().Item1 != fileInfo2)
+                                            f2.First().Item2.Add(fileInfo2);
+                                    }
+
                                 };
                             }
                         }
                     }
                 }
             }
-            var db = 1;
+
+
+            foreach (var ff in result)
+            {
+                var dups = String.Join(",\n ", ff.Item2.Select(y => y.FullName));
+                Console.WriteLine($"{ff.Item1.FullName} is {dups}");
+            }
+
+            foreach (var ff in result2)
+            {
+                var dups = String.Join(",\n ", ff.Files.Select(y => y.FullName));
+
+                //  var dups = ff.Files.Select(y=>y.FullName).ToList();
+                // Console.WriteLine($"{ff.FileInfo.FullName} is {dups}");
+            }
+
         }
 
     }
