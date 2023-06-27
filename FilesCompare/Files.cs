@@ -8,9 +8,8 @@ using System.Xml.Xsl;
 
 namespace FilesCompare
 {
-    internal class Files
+    public class Files
     {
-
         // This method accepts two strings the represent two files to
         // compare. A return value of 0 indicates that the contents of the files
         // are the same. A return value of any other value indicates that the
@@ -66,7 +65,8 @@ namespace FilesCompare
             return ((file1byte - file2byte) == 0);
         }
 
-        public Files(string[] paths)
+
+        public List<Tuple<FileInfo, List<FileInfo>>> Compare(string[] paths)
         {
             List<string> f = new();
             var files = new List<FileInfo>();
@@ -103,7 +103,9 @@ namespace FilesCompare
                                     else
                                     {
                                         if (!f2.First().Item2.Contains(fileInfo2) && f2.First().Item1 != fileInfo2)
+                                        {
                                             f2.First().Item2.Add(fileInfo2);
+                                        }
                                     }
 
                                 };
@@ -112,13 +114,7 @@ namespace FilesCompare
                     }
                 }
             }
-
-
-            foreach (var ff in result)
-            {
-                var dups = String.Join(",\n ", ff.Item2.Select(y => y.FullName));
-                Console.WriteLine($"{ff.Item1.FullName} is {dups}");
-            }
+            return result;
 
         }
 
