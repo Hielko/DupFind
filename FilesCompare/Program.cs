@@ -1,16 +1,37 @@
-﻿// See https://aka.ms/new-console-template for more information
-using FilesCompare;
+﻿using FilesCompare;
 
-var x = args[0];
+var currentDir = Directory.GetCurrentDirectory();
 
+Console.WriteLine();
+Console.WriteLine("Compare");
 
-Console.WriteLine(Directory.GetCurrentDirectory());
+string[] paths;
 
-Console.WriteLine("Hello, World!");
-var y = new CompareBySize().Compare(new string[] { $"{Directory.GetCurrentDirectory()}" } );
-
-foreach (var n in y)
+if (args.Length > 0)
 {
-    var si = string.Join(", ", n.Item2.Select(x => x.FullName));
-    Console.WriteLine($"{n.Item1} is in {si}");
+    paths = args;
+
+    paths = new string[] { "d:\\martini\\" };
+}
+else
+{
+    paths = new string[] { currentDir };
+}
+
+var x = Console.GetCursorPosition();
+using (var spinner = new Spinner(x.Left,x.Top))
+{
+    spinner.Start();
+    var result = new CompareBySize().Compare(paths);
+    spinner.Stop();
+
+    foreach (var n in result)
+    {
+        Console.WriteLine($"{n.Item1}: duplicates");
+        foreach (var r in n.Item2)
+        {
+            Console.WriteLine($"  -  {r.FullName}");
+        }
+        Console.WriteLine();
+    }
 }
