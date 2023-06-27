@@ -70,9 +70,10 @@ namespace FilesCompare
         {
             List<string> f = new();
             var files = new List<FileInfo>();
-            foreach (var s in paths)
+
+            foreach (var path in paths)
             {
-                foreach (var file in Directory.EnumerateFiles(s, "*.*", new EnumerationOptions { RecurseSubdirectories = true }))
+                foreach (var file in Directory.EnumerateFiles(path, "*.*", new EnumerationOptions { RecurseSubdirectories = true }))
                 {
                     files.Add(new FileInfo(file));
                 }

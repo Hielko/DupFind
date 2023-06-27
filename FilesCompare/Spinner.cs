@@ -16,7 +16,7 @@ namespace FilesCompare
         private bool active;
         private readonly Thread thread;
 
-        public Spinner(int left, int top, int delay = 100)
+        public Spinner(int left, int top, int delay = 250)
         {
             this.left = left;
             this.top = top;
@@ -49,7 +49,7 @@ namespace FilesCompare
         private void Draw(char c)
         {
             Console.SetCursorPosition(left, top);
-            Console.ForegroundColor = ConsoleColor.Green;
+            //Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(c);
         }
 
