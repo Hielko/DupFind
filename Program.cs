@@ -2,4 +2,4 @@
 using FilesCompare;
 
 Console.WriteLine("Hello, World!");
-new Files("c:\\test\\");
+new Files(new string[] { "c:\\test\\" } );

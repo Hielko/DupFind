@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Xsl;
 
 namespace FilesCompare
 {
@@ -65,20 +66,22 @@ namespace FilesCompare
             return ((file1byte - file2byte) == 0);
         }
 
-        public Files(string path)
+        public Files(string[] paths)
         {
-            var f = Directory.EnumerateFiles(path, "*.*", new EnumerationOptions { RecurseSubdirectories = true });
+            List<string> f = new();
             var files = new List<FileInfo>();
-            foreach (var file in f)
+            foreach (var s in paths)
             {
-                var fileInfo = new FileInfo(file);
-                files.Add(fileInfo);
+                foreach (var file in Directory.EnumerateFiles(s, "*.*", new EnumerationOptions { RecurseSubdirectories = true }))
+                {
+                    files.Add(new FileInfo(file));
+                }
             }
 
             var filesWithSameSizesLookup = (Lookup<long, FileInfo>)files.ToLookup(f => f.Length, f => f);
 
             var result = new List<Tuple<FileInfo, List<FileInfo>>>();
- 
+
             foreach (var group in filesWithSameSizesLookup)
             {
                 if (group.Count() > 1)
@@ -115,14 +118,6 @@ namespace FilesCompare
             {
                 var dups = String.Join(",\n ", ff.Item2.Select(y => y.FullName));
                 Console.WriteLine($"{ff.Item1.FullName} is {dups}");
-            }
-
-            foreach (var ff in result2)
-            {
-                var dups = String.Join(",\n ", ff.Files.Select(y => y.FullName));
-
-                //  var dups = ff.Files.Select(y=>y.FullName).ToList();
-                // Console.WriteLine($"{ff.FileInfo.FullName} is {dups}");
             }
 
         }
