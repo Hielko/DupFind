@@ -2,8 +2,8 @@
   "profiles": {
     "FilesCompare": {
       "commandName": "Project",
-      "commandLineArgs": "c:\\Users\\Hielko\\Downloads\\",
-      "workingDirectory": "D:\\Projecten\\FilesCompare\\Tests\\TestFiles"
+      "commandLineArgs": "sdsdf",
+      "workingDirectory": "$(SolutionDir)\\Tests"
     }
   }
 }

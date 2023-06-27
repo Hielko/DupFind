@@ -34,7 +34,8 @@ namespace FilesCompare
         public void Stop()
         {
             active = false;
-            Draw(' ');
+        //    Draw(' ');
+          //  Console.SetCursorPosition(left, top+5);
         }
 
         private void Spin()

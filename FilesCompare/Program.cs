@@ -10,7 +10,7 @@ string[] paths;
 if (args.Length > 0)
 {
     paths = args;
-//    paths = new string[] { "d:\\martini\\" };
+    paths = new string[] { "c:\\test\\" };
 }
 else
 {
