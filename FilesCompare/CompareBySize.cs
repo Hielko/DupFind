@@ -8,13 +8,13 @@ using System.Xml.Xsl;
 
 namespace FilesCompare
 {
-    public class Files
+    public class CompareBySize
     {
         // This method accepts two strings the represent two files to
         // compare. A return value of 0 indicates that the contents of the files
         // are the same. A return value of any other value indicates that the
         // files are not the same.
-        private bool FileCompare(string file1, string file2)
+        private static bool FileCompare(string file1, string file2)
         {
             int file1byte;
             int file2byte;
@@ -94,28 +94,26 @@ namespace FilesCompare
                             {
                                 if (FileCompare(fileInfo.FullName, fileInfo2.FullName) == true)
                                 {
-                                    var f2 = result.Where(x => (x.Item1 == fileInfo) || x.Item2.Contains(fileInfo2) ||
-                                                               (x.Item1 == fileInfo2) || x.Item2.Contains(fileInfo));
-                                    if (!f2.Any())
+                                    var found = result.Where(x => (x.Item1 == fileInfo) || x.Item2.Contains(fileInfo2) ||
+                                                                  (x.Item1 == fileInfo2) || x.Item2.Contains(fileInfo));
+                                    if (!found.Any())
                                     {
                                         result.Add(Tuple.Create(fileInfo, new List<FileInfo>() { fileInfo2 }));
                                     }
                                     else
                                     {
-                                        if (!f2.First().Item2.Contains(fileInfo2) && f2.First().Item1 != fileInfo2)
+                                        if (!found.First().Item2.Contains(fileInfo2) && found.First().Item1 != fileInfo2)
                                         {
-                                            f2.First().Item2.Add(fileInfo2);
+                                            found.First().Item2.Add(fileInfo2);
                                         }
                                     }
-
-                                };
+                                }
                             }
                         }
                     }
                 }
             }
             return result;
-
         }
 
     }
