@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "FilesCompare": {
+      "commandName": "Project",
+      "commandLineArgs": "TestFiles",
+      "workingDirectory": "D:\\Projecten\\FilesCompare\\Tests\\"
+    }
+  }
+}
