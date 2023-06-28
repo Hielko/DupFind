@@ -10,6 +10,10 @@ namespace FilesCompare
 {
     public class CompareBySize
     {
+
+        public static bool AreFileContentsEqual(String path1, String path2) =>
+              File.ReadAllBytes(path1).SequenceEqual(File.ReadAllBytes(path2));
+
         // This method accepts two strings the represent two files to
         // compare. A return value of 0 indicates that the contents of the files
         // are the same. A return value of any other value indicates that the
@@ -93,7 +97,7 @@ namespace FilesCompare
                         {
                             if ((fileInfo.FullName != fileInfo2.FullName))
                             {
-                                if (FileCompare(fileInfo.FullName, fileInfo2.FullName) == true)
+                                if (AreFileContentsEqual(fileInfo.FullName, fileInfo2.FullName) == true)
                                 {
                                     var found = result.Where(x => (x.Item1 == fileInfo) || x.Item2.Contains(fileInfo2) ||
                                                                   (x.Item1 == fileInfo2) || x.Item2.Contains(fileInfo));
