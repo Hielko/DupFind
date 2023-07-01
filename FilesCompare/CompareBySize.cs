@@ -15,19 +15,19 @@
             {
                 if (group.Count() > 1)
                 {
-                    foreach (var fileInfo in group)
+                    foreach (var fileInfo1 in group)
                     {
                         foreach (var fileInfo2 in group)
                         {
-                            if (fileInfo.FullName != fileInfo2.FullName)
+                            if (fileInfo1.FullName != fileInfo2.FullName)
                             {
-                                if (AreFileContentsEqual(fileInfo.FullName, fileInfo2.FullName) == true)
+                                if (AreFileContentsEqual(fileInfo1.FullName, fileInfo2.FullName) == true)
                                 {
-                                    var found = result.Where(x => (x.Item1 == fileInfo) || x.Item2.Contains(fileInfo2) ||
-                                                                  (x.Item1 == fileInfo2) || x.Item2.Contains(fileInfo));
+                                    var found = result.Where(x => (x.Item1 == fileInfo1) || x.Item2.Contains(fileInfo2) ||
+                                                                  (x.Item1 == fileInfo2) || x.Item2.Contains(fileInfo1));
                                     if (!found.Any())
                                     {
-                                        result.Add(Tuple.Create(fileInfo, new List<FileInfo>() { fileInfo2 }));
+                                        result.Add(Tuple.Create(fileInfo1, new List<FileInfo>() { fileInfo2 }));
                                     }
                                     else
                                     {
