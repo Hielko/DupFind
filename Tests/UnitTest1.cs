@@ -8,7 +8,8 @@ namespace Tests
         [TestMethod]
         public void TestMethod1()
         {
-            var result = new CompareBySize().Compare(new string[] { "TestFiles" });
+            var files = new Files().GetFiles(new string[] { "TestFiles" });
+            var result = new CompareBySize().CompareList(files);
             var first = result.First();
             Assert.IsNotNull(first);
             Assert.IsNotNull(first.Item1);

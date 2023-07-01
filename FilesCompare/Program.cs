@@ -1,8 +1,8 @@
 ﻿using FilesCompare;
+using System.Text;
 
 var currentDir = Directory.GetCurrentDirectory();
 
-Console.WriteLine();
 Console.WriteLine("Compare");
 
 string[] paths;
@@ -16,21 +16,29 @@ else
     paths = new string[] { currentDir };
 }
 
-var cursor = Console.GetCursorPosition();
 
-using (var spinner = new Spinner(cursor.Left,cursor.Top))
+Console.WriteLine("Paths: ");
+foreach (string path in paths) { Console.Write(path + " "); }
+Console.WriteLine();
+
+var files = new Files().GetFiles(paths);
+Console.WriteLine($"Files: {files.Count}");
+
+StringBuilder stringBuilder = new();
+
+var result = new CompareBySize().CompareList(files);
+
+foreach (var dup in result)
 {
-    spinner.Start();
-    var result = new CompareBySize().Compare(paths);
-    spinner.Stop();
-
-    foreach (var dup in result)
+    Console.WriteLine($"\"{dup.Item1}\": duplicates");
+    stringBuilder.Append($"@rem orginal  \"{dup.Item1.FullName}\"\n");
+    //stringBuilder.Append($"@rem del  \"{dup.Item1.FullName}\"\n");
+    foreach (var r in dup.Item2)
     {
-        Console.WriteLine($"{dup.Item1}: duplicates");
-        foreach (var r in dup.Item2)
-        {
-            Console.WriteLine($"  -  {r.FullName}");
-        }
-        Console.WriteLine();
+        Console.WriteLine($"  -  \"{r.FullName}\"");
+        stringBuilder.Append($"del  \"{r.FullName}\"\n");
     }
+    Console.WriteLine();
 }
+
+File.WriteAllText("deldups.bat", stringBuilder.ToString());
