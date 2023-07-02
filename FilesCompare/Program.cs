@@ -28,6 +28,8 @@ StringBuilder stringBuilder = new();
 
 var result = new CompareBySize().CompareList(files);
 
+Console.WriteLine("Stats: " + new Stats(files, result));
+
 foreach (var dup in result)
 {
     Console.WriteLine($"\"{dup.Item1}\": duplicates");
