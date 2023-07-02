@@ -26,11 +26,11 @@ Console.WriteLine($"Files: {files.Count}");
 
 StringBuilder stringBuilder = new();
 
-var result = new CompareBySize().CompareList(files);
+var compareResult = new CompareBySize().CompareList(files);
 
-Console.WriteLine("Stats: " + new Stats(files, result));
+Console.WriteLine("Stats: " + new Stats(files, compareResult));
 
-foreach (var dup in result)
+foreach (var dup in compareResult)
 {
     Console.WriteLine($"\"{dup.Item1}\": duplicates");
     stringBuilder.Append($"@rem orginal  \"{dup.Item1.FullName}\"\n");
