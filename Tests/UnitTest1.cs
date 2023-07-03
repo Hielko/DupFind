@@ -1,4 +1,4 @@
-using FilesCompare;
+using DupFind;
 
 namespace Tests
 {

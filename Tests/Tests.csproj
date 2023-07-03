@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FilesCompare\FilesCompare.csproj" />
+    <ProjectReference Include="..\DupFind\DupFind.csproj" />
   </ItemGroup>
 
   <ItemGroup>

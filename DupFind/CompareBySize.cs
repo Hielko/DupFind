@@ -1,4 +1,4 @@
-﻿namespace FilesCompare
+﻿namespace DupFind
 {
     public class CompareBySize
     {

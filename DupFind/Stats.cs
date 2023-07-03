@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static FilesCompare.Extentions;
+using static DupFind.Extentions;
 
-namespace FilesCompare
+namespace DupFind
 {
     public class Stats
     {

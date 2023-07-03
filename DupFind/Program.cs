@@ -1,4 +1,4 @@
-﻿using FilesCompare;
+﻿using DupFind;
 using System.Text;
 
 var currentDir = Directory.GetCurrentDirectory();
