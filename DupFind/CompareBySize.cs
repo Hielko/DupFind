@@ -1,15 +1,17 @@
-﻿namespace DupFind
+﻿using System;
+
+namespace DupFind
 {
     public class CompareBySize
     {
         public static bool AreFileContentsEqual(string path1, string path2) =>
               File.ReadAllBytes(path1).SequenceEqual(File.ReadAllBytes(path2));
 
-        public List<Tuple<FileInfo, List<FileInfo>>> CompareList(List<FileInfo> files)
+        public List<Duplicates> CompareList(List<FileInfo> files)
         {
             var filesWithSameSizesLookup = (Lookup<long, FileInfo>)files.ToLookup(f => f.Length, f => f);
 
-            var result = new List<Tuple<FileInfo, List<FileInfo>>>();
+            var result = new List<Duplicates>();
 
             foreach (var group in filesWithSameSizesLookup)
             {
@@ -23,19 +25,18 @@
                             {
                                 if (AreFileContentsEqual(fileInfo1.FullName, fileInfo2.FullName) == true)
                                 {
-                                    var found = result.Where(x => (x.Item1 == fileInfo1) || x.Item2.Contains(fileInfo2) ||
-                                                                  (x.Item1 == fileInfo2) || x.Item2.Contains(fileInfo1));
-                                    if (!found.Any())
+                                    var found1 = result.Where(x => (x.files.Contains(fileInfo1)));
+                                    if (!found1.Any())
                                     {
-                                        result.Add(Tuple.Create(fileInfo1, new List<FileInfo>() { fileInfo2 }));
+                                        result.Add(new Duplicates { files = new List<FileInfo> { fileInfo1, fileInfo2 } });
                                     }
-                                    else
+
+                                    var found2 = result.Where(x => (x.files.Contains(fileInfo2)));
+                                    if (!found2.Any())
                                     {
-                                        if (!found.First().Item2.Contains(fileInfo2) && found.First().Item1 != fileInfo2)
-                                        {
-                                            found.First().Item2.Add(fileInfo2);
-                                        }
+                                        result.Add(new Duplicates { files = new List<FileInfo> { fileInfo2, fileInfo1 } });
                                     }
+
                                 }
                             }
                         }

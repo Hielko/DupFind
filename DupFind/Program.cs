@@ -28,19 +28,32 @@ StringBuilder stringBuilder = new();
 
 var compareResult = new CompareBySize().CompareList(files);
 
-Console.WriteLine("Stats: " + new Stats(files, compareResult));
+new SortByPath().Sort(paths, compareResult);
 
-foreach (var dup in compareResult)
-{
-    Console.WriteLine($"\"{dup.Item1}\": duplicates");
-    stringBuilder.Append($"@rem orginal  \"{dup.Item1.FullName}\"\n");
-    //stringBuilder.Append($"@rem del  \"{dup.Item1.FullName}\"\n");
-    foreach (var r in dup.Item2)
-    {
-        Console.WriteLine($"  -  \"{r.FullName}\"");
-        stringBuilder.Append($"del  \"{r.FullName}\"\n");
-    }
-    Console.WriteLine();
-}
+
+
+
+//
+
+//Console.WriteLine("Stats: " + new Stats(files, compareResult));
+
+//foreach (var dup in compareResult)
+//{
+//    var all = new List<FileInfo>();
+//    all.Add(dup.Item1);
+//    all.AddRange(dup.Item2);
+//    var orginal = all.Find(x => x.Directory.Name == paths[0]);
+
+
+//    Console.WriteLine($"\"{dup.Item1}\": duplicates");
+//    stringBuilder.Append($"@rem orginal  \"{dup.Item1.FullName}\"\n");
+//    //stringBuilder.Append($"@rem del  \"{dup.Item1.FullName}\"\n");
+//    foreach (var r in dup.Item2)
+//    {
+//        Console.WriteLine($"  -  \"{r.FullName}\"");
+//        stringBuilder.Append($"del  \"{r.FullName}\"\n");
+//    }
+//    Console.WriteLine();
+//}
 
 File.WriteAllText("deldups.bat", stringBuilder.ToString());
