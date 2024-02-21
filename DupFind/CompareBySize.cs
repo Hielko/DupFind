@@ -17,30 +17,28 @@ namespace DupFind
             {
                 if (group.Count() > 1)
                 {
+                    var duplicates = new Duplicates();
+
                     foreach (var fileInfo1 in group)
                     {
                         foreach (var fileInfo2 in group)
                         {
-                            if (fileInfo1.FullName != fileInfo2.FullName)
+                            if ((fileInfo1.FullName != fileInfo2.FullName) && !(duplicates.files.Contains(fileInfo1) || duplicates.files.Contains(fileInfo2)))
                             {
                                 if (AreFileContentsEqual(fileInfo1.FullName, fileInfo2.FullName) == true)
                                 {
-                                    var found1 = result.Where(x => (x.files.Contains(fileInfo1)));
-                                    if (!found1.Any())
-                                    {
-                                        result.Add(new Duplicates { files = new List<FileInfo> { fileInfo1, fileInfo2 } });
-                                    }
-
-                                    var found2 = result.Where(x => (x.files.Contains(fileInfo2)));
-                                    if (!found2.Any())
-                                    {
-                                        result.Add(new Duplicates { files = new List<FileInfo> { fileInfo2, fileInfo1 } });
-                                    }
-
+                                    duplicates.files.Add(fileInfo1);
+                                    duplicates.files.Add(fileInfo2);
                                 }
                             }
                         }
                     }
+                    duplicates.files = duplicates.files.Distinct().ToList();
+                    if (duplicates?.files.Count > 0)
+                    {
+                        result.Add(duplicates);
+                    }
+
                 }
             }
             return result;

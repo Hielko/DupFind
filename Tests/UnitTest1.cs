@@ -5,25 +5,46 @@ namespace Tests
     [TestClass]
     public class UnitTest1
     {
+        string getLastDirectoryPart(string path)
+        {
+            return path.Substring(path.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+        }
+
         [TestMethod]
         public void TestMethod1()
         {
-            var paths = new String[]  { "TestFiles"};
+            var tmppaths = new String[] { "TestFiles/C", "TestFiles/A" };
+            var paths = tmppaths.Select(x => new DirectoryInfo(x)).ToArray();
             var files = new Files().GetFiles(paths);
             var result = new CompareBySize().CompareList(files);
-            var sorted = new SortByPath().Sort(paths, result);
 
             var first = result.First();
             Assert.IsNotNull(first);
+            var orginal = first.GetOrignal(paths);
+
+            Assert.IsTrue(getLastDirectoryPart(orginal?.DirectoryName) == "C");
+            var duplicates = first.GetDuplicates(paths);
+            Assert.IsTrue(getLastDirectoryPart(duplicates[0].DirectoryName) == "A");
+
+        }
 
 
+        [TestMethod]
+        public void TestMethod2()
+        {
+            var tmppaths = new String[] { "TestFiles/A", "TestFiles/C" };
+            var paths = tmppaths.Select(x => new DirectoryInfo(x)).ToArray();
+            var files = new Files().GetFiles(paths);
+            var result = new CompareBySize().CompareList(files);
 
-            //Assert.IsNotNull(first.Item1);
-            //Assert.AreEqual(first.Item2.Count, 2);
+            var first = result.First();
+            Assert.IsNotNull(first);
+            var orginal = first.GetOrignal(paths);
 
-            //Assert.AreEqual(first.Item1.DirectoryName + "\\" + first.Item1.FullName, "TestFiles\\A\\aFile-dup.txt");
-            //Assert.AreEqual(first.Item2.First().DirectoryName + "\\" + first.Item2.First().FullName, "TestFiles\\B\\aFile-dup.txt");
-            //Assert.AreEqual(first.Item2.Skip(1).First().DirectoryName + "\\" + first.Item2.Skip(1).First().FullName, "TestFiles\\B\\aFile.txt");
+            Assert.IsTrue(getLastDirectoryPart(orginal?.DirectoryName) == "A");
+            var duplicates = first.GetDuplicates(paths);
+            Assert.IsTrue(getLastDirectoryPart(duplicates[0].DirectoryName) == "C");
+
         }
     }
 }

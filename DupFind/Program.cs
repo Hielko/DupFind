@@ -1,24 +1,23 @@
 ﻿using DupFind;
 using System.Text;
 
-var currentDir = Directory.GetCurrentDirectory();
+Console.WriteLine("DupFind");
 
-Console.WriteLine("Compare");
-
-string[] paths;
+string[] tmppaths;
 
 if (args.Length > 0)
 {
-    paths = args;
+    tmppaths = args;
 }
 else
 {
-    paths = new string[] { currentDir };
+    tmppaths = new string[] { Directory.GetCurrentDirectory() };
 }
 
+var paths = tmppaths.Select(x => new DirectoryInfo(x)).ToArray();
 
 Console.WriteLine("Paths: ");
-foreach (string path in paths) { Console.Write(path + " "); }
+foreach (var path in paths) { Console.Write(path + " "); }
 Console.WriteLine();
 
 var files = new Files().GetFiles(paths);
@@ -28,32 +27,20 @@ StringBuilder stringBuilder = new();
 
 var compareResult = new CompareBySize().CompareList(files);
 
-new SortByPath().Sort(paths, compareResult);
+Console.WriteLine("Stats: " + new Stats(files, compareResult));
 
-
-
-
-//
-
-//Console.WriteLine("Stats: " + new Stats(files, compareResult));
-
-//foreach (var dup in compareResult)
-//{
-//    var all = new List<FileInfo>();
-//    all.Add(dup.Item1);
-//    all.AddRange(dup.Item2);
-//    var orginal = all.Find(x => x.Directory.Name == paths[0]);
-
-
-//    Console.WriteLine($"\"{dup.Item1}\": duplicates");
-//    stringBuilder.Append($"@rem orginal  \"{dup.Item1.FullName}\"\n");
-//    //stringBuilder.Append($"@rem del  \"{dup.Item1.FullName}\"\n");
-//    foreach (var r in dup.Item2)
-//    {
-//        Console.WriteLine($"  -  \"{r.FullName}\"");
-//        stringBuilder.Append($"del  \"{r.FullName}\"\n");
-//    }
-//    Console.WriteLine();
-//}
+foreach (var dup in compareResult)
+{
+    var orginal = dup.GetOrignal(paths);
+    var duplicates = dup.GetDuplicates(paths);
+    Console.WriteLine($"\"{orginal?.FullName}\": duplicates");
+    stringBuilder.Append($"@rem orginal  \"{orginal?.FullName}\"\n");
+    foreach (var file in duplicates)
+    {
+        Console.WriteLine($"  -  \"{file.FullName}\"");
+        stringBuilder.Append($"del  \"{file.FullName}\"\n");
+    }
+    Console.WriteLine();
+}
 
 File.WriteAllText("deldups.bat", stringBuilder.ToString());

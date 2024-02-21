@@ -2,7 +2,7 @@
   "profiles": {
     "FilesCompare": {
       "commandName": "Project",
-      "commandLineArgs": "sdsdf",
+      "commandLineArgs": "\"f:\\Drumit 5\\Drumit SD card\"",
       "workingDirectory": "$(SolutionDir)\\Tests"
     }
   }
