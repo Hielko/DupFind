@@ -18,27 +18,31 @@ namespace DupFind
 
             var result = new List<Duplicates>();
 
-            Parallel.ForEach(filesWithSameSizesLookup, group =>
+            Parallel.ForEach(filesWithSameSizesLookup, sizeAndFileinfo =>
             {
-                if (group.Count() > 1)
+                if (sizeAndFileinfo.Count() > 1)
                 {
                     var hashTable = new List<Tuple<string, FileInfo>>();
-                    foreach (var fileInfo in group)
+
+                    foreach (var fileInfo in sizeAndFileinfo)
                     {
                         hashTable.Add(Tuple.Create(CalculateMD5(fileInfo.FullName), fileInfo));
                     }
 
                     var grouped = hashTable.GroupBy(x => x.Item1);
+
                     foreach (var kvp in grouped)
                     {
-                        var z = kvp.ToArray();
-                        if (z.Length > 1)
+                        var hashAndFileinfo = kvp.ToArray();
+                        if (hashAndFileinfo.Length > 1)
                         {
                             var duplicates = new Duplicates();
-                            foreach (var hashAndFileTuple in z)
+
+                            foreach (var hashAndFileTuple in hashAndFileinfo)
                             {
                                 duplicates.files.Add(hashAndFileTuple.Item2);
                             }
+
                             if (duplicates?.files.Count > 0)
                             {
                                 result.Add(duplicates);

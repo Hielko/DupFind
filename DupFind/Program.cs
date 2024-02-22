@@ -19,7 +19,7 @@ var paths = tmppaths.Select(x => new DirectoryInfo(x)).ToArray();
 Console.WriteLine("Paths: ");
 foreach (var path in paths)
 {
-    Console.Writeln("   " + path);
+    Console.WriteLine("   " + path);
 }
 Console.WriteLine();
 
