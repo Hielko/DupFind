@@ -17,7 +17,10 @@ else
 var paths = tmppaths.Select(x => new DirectoryInfo(x)).ToArray();
 
 Console.WriteLine("Paths: ");
-foreach (var path in paths) { Console.Write(path + " "); }
+foreach (var path in paths)
+{
+    Console.Writeln("   " + path);
+}
 Console.WriteLine();
 
 var files = new Files().GetFiles(paths);
@@ -32,7 +35,7 @@ Console.WriteLine("Stats: " + new Stats(files, compareResult));
 foreach (var dup in compareResult)
 {
     var orginal = dup.GetOrignal(paths);
-    var duplicates =   dup.GetDuplicates(paths);
+    var duplicates = dup.GetDuplicates(paths);
     Console.WriteLine($"\"{orginal?.FullName}\": duplicates");
     stringBuilder.Append($"@rem orginal  \"{orginal?.FullName}\"\n");
     foreach (var file in duplicates)

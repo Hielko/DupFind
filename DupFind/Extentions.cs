@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace DupFind
 {
-    public static class Extentions
+    public static class Extensions
     {
-
         static readonly string[] SizeSuffixes =
           { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
 

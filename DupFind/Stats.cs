@@ -5,20 +5,18 @@ namespace DupFind
 {
     public class Stats
     {
-        public long DuplicateCount { get; private set; } = 0;
-        public long DuplicateSize { get; private set; } = 0;
-        public long TotalFiles { get; private set; } = 0;
-        public long OriginalsDuplicatedCount { get; private set; } = 0;
-
+        public long DuplicateCount { get; private set; };
+        public long DuplicateSize { get; private set; };
+        public long TotalFiles { get; private set; };
+        public long OriginalsDuplicatedCount { get; private set; };
 
         public Stats(List<FileInfo> files, List<Duplicates> result)
         {
-            var sb = new StringBuilder();
             TotalFiles = files.Count;
             OriginalsDuplicatedCount = result.Count;
-            result.ForEach(x =>
+            result.ForEach(duplicates =>
                 {
-                    if (x.files.Count > 0)
+                    if (duplicates.files.Count > 0)
                     {
                         DuplicateCount += x.files.Count;
                         DuplicateSize += (x.files.Count - 1) * x.files[0].Length;
