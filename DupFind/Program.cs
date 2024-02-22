@@ -32,7 +32,7 @@ Console.WriteLine("Stats: " + new Stats(files, compareResult));
 foreach (var dup in compareResult)
 {
     var orginal = dup.GetOrignal(paths);
-    var duplicates = dup.GetDuplicates(paths);
+    var duplicates =   dup.GetDuplicates(paths);
     Console.WriteLine($"\"{orginal?.FullName}\": duplicates");
     stringBuilder.Append($"@rem orginal  \"{orginal?.FullName}\"\n");
     foreach (var file in duplicates)
