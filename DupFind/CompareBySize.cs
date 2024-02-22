@@ -1,49 +1,54 @@
-﻿namespace DupFind
+﻿using System.Security.Cryptography;
+
+namespace DupFind
 {
     public class CompareBySize
     {
-        public static bool AreFileContentsEqual(string path1, string path2) =>
-              File.ReadAllBytes(path1).SequenceEqual(File.ReadAllBytes(path2));
+        static string CalculateMD5(string filename)
+        {
+            using var md5 = MD5.Create();
+            using var stream = File.OpenRead(filename);
+            var hash = md5.ComputeHash(stream);
+            return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+        }
 
-        public List<Tuple<FileInfo, List<FileInfo>>> CompareList(List<FileInfo> files)
+        public List<Duplicates> CompareList(List<FileInfo> files)
         {
             var filesWithSameSizesLookup = (Lookup<long, FileInfo>)files.ToLookup(f => f.Length, f => f);
 
-            var result = new List<Tuple<FileInfo, List<FileInfo>>>();
+            var result = new List<Duplicates>();
 
-            foreach (var group in filesWithSameSizesLookup)
+            Parallel.ForEach(filesWithSameSizesLookup, group =>
             {
                 if (group.Count() > 1)
                 {
-                    foreach (var fileInfo1 in group)
+                    var hashTable = new List<Tuple<string, FileInfo>>();
+                    foreach (var fileInfo in group)
                     {
-                        foreach (var fileInfo2 in group)
+                        hashTable.Add(Tuple.Create(CalculateMD5(fileInfo.FullName), fileInfo));
+                    }
+
+                    var grouped = hashTable.GroupBy(x => x.Item1);
+                    foreach (var kvp in grouped)
+                    {
+                        var z = kvp.ToArray();
+                        if (z.Length > 1)
                         {
-                            if (fileInfo1.FullName != fileInfo2.FullName)
+                            var duplicates = new Duplicates();
+                            foreach (var hashAndFileTuple in z)
                             {
-                                if (AreFileContentsEqual(fileInfo1.FullName, fileInfo2.FullName) == true)
-                                {
-                                    var found = result.Where(x => (x.Item1 == fileInfo1) || x.Item2.Contains(fileInfo2) ||
-                                                                  (x.Item1 == fileInfo2) || x.Item2.Contains(fileInfo1));
-                                    if (!found.Any())
-                                    {
-                                        result.Add(Tuple.Create(fileInfo1, new List<FileInfo>() { fileInfo2 }));
-                                    }
-                                    else
-                                    {
-                                        if (!found.First().Item2.Contains(fileInfo2) && found.First().Item1 != fileInfo2)
-                                        {
-                                            found.First().Item2.Add(fileInfo2);
-                                        }
-                                    }
-                                }
+                                duplicates.files.Add(hashAndFileTuple.Item2);
+                            }
+                            if (duplicates?.files.Count > 0)
+                            {
+                                result.Add(duplicates);
                             }
                         }
                     }
                 }
-            }
+            });
+
             return result;
         }
-
     }
 }
