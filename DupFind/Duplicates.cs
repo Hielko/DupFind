@@ -8,7 +8,7 @@
         {
             if (files.Count <= 1) throw new Exception("Internal: file has no duplicates");
 
-            if (paths.Count() <= 1)
+            if (paths.Length <= 1)
             {
                 return files.Any() ? files.First() : null;
             }
@@ -16,9 +16,11 @@
             foreach (var file in files)
             {
                 if (file.DirectoryName.StartsWith(paths[0].FullName))
+                {
                     return file;
-
+                }
             }
+
             return null;
         }
 

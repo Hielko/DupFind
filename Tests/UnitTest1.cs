@@ -25,7 +25,6 @@ namespace Tests
             Assert.IsTrue(getLastDirectoryPart(orginal?.DirectoryName) == "C");
             var duplicates = first.GetDuplicates(paths);
             Assert.IsTrue(getLastDirectoryPart(duplicates[0].DirectoryName) == "A");
-
         }
 
 
@@ -44,7 +43,6 @@ namespace Tests
             Assert.IsTrue(getLastDirectoryPart(orginal?.DirectoryName) == "A");
             var duplicates = first.GetDuplicates(paths);
             Assert.IsTrue(getLastDirectoryPart(duplicates[0].DirectoryName) == "C");
-
         }
     }
 }

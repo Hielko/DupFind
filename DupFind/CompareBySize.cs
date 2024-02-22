@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace DupFind
 {
@@ -7,14 +6,10 @@ namespace DupFind
     {
         static string CalculateMD5(string filename)
         {
-            using (var md5 = MD5.Create())
-            {
-                using (var stream = File.OpenRead(filename))
-                {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
-            }
+            using var md5 = MD5.Create();
+            using var stream = File.OpenRead(filename);
+            var hash = md5.ComputeHash(stream);
+            return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
         }
 
         public List<Duplicates> CompareList(List<FileInfo> files)
@@ -49,14 +44,11 @@ namespace DupFind
                                 result.Add(duplicates);
                             }
                         }
-
                     }
-
                 }
             });
 
             return result;
         }
-
     }
 }
