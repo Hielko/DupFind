@@ -16,7 +16,7 @@ namespace Tests
             var tmppaths = new String[] { "TestFiles/C", "TestFiles/A" };
             var paths = tmppaths.Select(x => new DirectoryInfo(x)).ToArray();
             var files = new Files().GetFiles(paths);
-            var result = new CompareBySize().CompareList(files);
+            var result = new FindDuplicates().Find(files);
 
             var first = result.First();
             Assert.IsNotNull(first);
@@ -34,7 +34,7 @@ namespace Tests
             var tmppaths = new String[] { "TestFiles/A", "TestFiles/C" };
             var paths = tmppaths.Select(x => new DirectoryInfo(x)).ToArray();
             var files = new Files().GetFiles(paths);
-            var result = new CompareBySize().CompareList(files);
+            var result = new FindDuplicates().Find(files);
 
             var first = result.First();
             Assert.IsNotNull(first);

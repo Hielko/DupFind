@@ -2,7 +2,7 @@
 
 namespace DupFind
 {
-    public class CompareBySize
+    public class FindDuplicates
     {
         static string CalculateMD5(string filename)
         {
@@ -12,7 +12,7 @@ namespace DupFind
             return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
         }
 
-        public List<Duplicates> CompareList(List<FileInfo> files)
+        public List<Duplicates> Find(List<FileInfo> files)
         {
             var filesWithSameSizesLookup = (Lookup<long, FileInfo>)files.ToLookup(f => f.Length, f => f);
 

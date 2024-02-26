@@ -1,5 +1,4 @@
 ﻿using DupFind;
-using System.Text;
 
 Console.WriteLine("DupFind");
 
@@ -23,27 +22,16 @@ foreach (var path in paths)
 }
 Console.WriteLine();
 
+
 var files = new Files().GetFiles(paths);
 Console.WriteLine($"Files: {files.Count}");
 
-StringBuilder stringBuilder = new();
+var duplicates = new FindDuplicates().Find(files);
 
-var compareResult = new CompareBySize().CompareList(files);
+Console.WriteLine("Stats: " + new Stats(files, duplicates));
 
-Console.WriteLine("Stats: " + new Stats(files, compareResult));
+new WriteToConsole(paths, duplicates);
 
-foreach (var dup in compareResult)
-{
-    var orginal = dup.GetOrignal(paths);
-    var duplicates = dup.GetDuplicates(paths);
-    Console.WriteLine($"\"{orginal?.FullName}\": duplicates");
-    stringBuilder.Append($"@rem orginal  \"{orginal?.FullName}\"\n");
-    foreach (var file in duplicates)
-    {
-        Console.WriteLine($"  -  \"{file.FullName}\"");
-        stringBuilder.Append($"del  \"{file.FullName}\"\n");
-    }
-    Console.WriteLine();
-}
+new WriteBatchfile(paths, duplicates);
 
-File.WriteAllText("deldups.bat", stringBuilder.ToString());
+
